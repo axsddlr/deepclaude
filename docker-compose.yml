@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   api:
     build: .
@@ -7,8 +9,42 @@ services:
       - "127.0.0.1:1337:1337"
     volumes:
       - ./config.toml:/usr/local/bin/config.toml
+    environment:
+      - DEEPCLAUDE_HOST=0.0.0.0
+      - DEEPCLAUDE_PORT=1337
     networks:
       - deepclaude_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:1337/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: deepclaude_frontend
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:1337
+    depends_on:
+      - api
+    networks:
+      - deepclaude_network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
 
 networks:
   deepclaude_network:

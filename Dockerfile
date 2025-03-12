@@ -6,7 +6,7 @@ COPY . .
 
 # Install build dependencies
 RUN apt-get update && \
-    apt-get install -y pkg-config libssl-dev && \
+    apt-get install -y pkg-config libssl-dev curl && \
     rm -rf /var/lib/apt/lists/*
 
 # Build the application
@@ -19,7 +19,7 @@ WORKDIR /usr/local/bin
 
 # Install runtime dependencies
 RUN apt-get update && \
-    apt-get install -y libssl3 ca-certificates && \
+    apt-get install -y libssl3 ca-certificates curl && \
     rm -rf /var/lib/apt/lists/*
 
 # Copy the built binary
@@ -32,6 +32,10 @@ ENV DEEPCLAUDE_PORT=1337
 
 # Expose port 1337
 EXPOSE 1337
+
+# Set health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+  CMD curl -f http://localhost:1337/health || exit 1
 
 # Run the binary
 CMD ["./deepclaude"]
