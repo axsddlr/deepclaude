@@ -38,7 +38,7 @@
 
 use crate::{
     error::{ApiError, Result},
-    models::{ApiConfig, Message, Role},
+    models::request::{ApiConfig, Message, Role},
 };
 use futures::Stream;
 use reqwest::{header::HeaderMap, Client};
