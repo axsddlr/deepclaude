@@ -10,9 +10,6 @@
 pub mod anthropic;
 pub mod deepseek;
 
-pub use anthropic::AnthropicClient;
-pub use deepseek::DeepSeekClient;
-
 use crate::error::Result;
 use reqwest::header::{HeaderMap, HeaderName, HeaderValue};
 use std::collections::HashMap;
