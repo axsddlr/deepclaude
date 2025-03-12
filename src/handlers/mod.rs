@@ -6,12 +6,13 @@
 //! usage tracking and cost calculations.
 
 use crate::{
-    clients::{AnthropicClient, DeepSeekClient},
+    clients::{anthropic::AnthropicClient, deepseek::DeepSeekClient},
     config::Config,
     error::{ApiError, Result, SseResponse},
     models::{
-        ApiRequest, ApiResponse, ContentBlock, CombinedUsage, DeepSeekUsage, AnthropicUsage,
-        ExternalApiResponse, Message, Role, StreamEvent,
+        request::{ApiRequest, Message, Role},
+        response::{ApiResponse, ContentBlock, CombinedUsage, DeepSeekUsage, AnthropicUsage,
+        ExternalApiResponse, StreamEvent},
     },
 };
 use axum::{
@@ -23,6 +24,8 @@ use chrono::Utc;
 use futures::StreamExt;
 use std::{sync::Arc, collections::HashMap};
 use tokio_stream::wrappers::ReceiverStream;
+
+pub mod health;
 
 /// Application state shared across request handlers.
 ///
